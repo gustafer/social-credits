@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import './App.scss'
-import { render } from 'react-dom';
 import { Text, Button, Grid } from '@mantine/core';
 
 function App() {
