@@ -6,18 +6,27 @@ import { isChinaLoverState, isTaiwanLoverState } from '../atoms/atoms';
 import '/src/styles/App.scss'
 
 function App() {
-  const [credits, setCredits] = useState<number>(0);
+  const [credits, setCredits] = useState<number>(1);
 
 
   const [isChinaLover, setIsChinaLover] = useRecoilState(isChinaLoverState);
   const [isTaiwanLover, setIsTaiwanLover] = useRecoilState(isTaiwanLoverState);
   const [isTaiwanEnjoyer, setIsTaiwanEnjoyer] = useState<boolean>(false);
+  const [isChinaEnjoyer, setIsChinaEnjoyer] = useState<boolean>(false);
   const showButtons = useMemo(() => !isChinaLover && !isTaiwanLover, [isChinaLover, isTaiwanLover]);
 
   useEffect(() => {
     //Positivo
-    if (credits >= 1000)
+    if (credits >= 1) {
+    if (credits >= 999)
       setIsChinaLover(true);
+
+      //Enjoyer
+      if (credits >= 499)
+      setIsChinaEnjoyer(true);
+      else
+        setIsChinaEnjoyer(false);
+    };
 
     //Negativo
     if (credits < 0) {
@@ -34,16 +43,17 @@ function App() {
 
   }, [credits]);
 
-  const addCredits = () => setCredits(credits + 100);
+  const addCredits = () => setCredits(credits + (isChinaEnjoyer ? 200 : 100));
 
   const decreaseCredits = () => setCredits(credits - (isTaiwanEnjoyer ? 200 : 100));
   
 
   const clearCredits = () => {
-    setCredits(0);
+    setCredits(1);
     setIsTaiwanLover(false);
     setIsTaiwanEnjoyer(false);
     setIsChinaLover(false);
+    setIsChinaEnjoyer(false);
   }
 
   return (
@@ -52,7 +62,8 @@ function App() {
         {showButtons ? <>
           <Text>quick test :</Text>
 
-          <h1>{isTaiwanEnjoyer ? "does amogus sus?" : "Does taiwan make part of china?"}</h1>
+          <h1>
+            {isChinaEnjoyer ? "Which country is the best one, china or usa?" : "Did something important happened in june 4th, 1989?"}</h1>
 
         </> : <></>
         }
@@ -76,13 +87,16 @@ function App() {
             <div className="buttons">
               <Grid columns={24} justify="center">
                 <Grid.Col span={12}>
-                  <Button onClick={addCredits}>
-                    Yes
+                  <Button onClick={decreaseCredits}>
+                    
+                  {!isChinaEnjoyer ? "yes" : "usa" || !isTaiwanEnjoyer ? "usa" : "no"}
+                  
                   </Button>
                 </Grid.Col>
                 <Grid.Col span={12}>
-                  <Button onClick={decreaseCredits}>
-                    No
+                  <Button onClick={addCredits}>
+                    
+                  {!isChinaEnjoyer ? "nothing" : "china" }
                   </Button>
                 </Grid.Col>
               </Grid>
