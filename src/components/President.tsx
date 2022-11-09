@@ -1,33 +1,30 @@
 
 import { Input, Space, Text } from '@mantine/core';
-import { useState } from 'react';
-import { atom, useRecoilValue } from 'recoil';
+import { useMemo, useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import { isChinaLoverState, isTaiwanLoverState } from '../atoms/atoms';
 
 
 function President() {
     const [name, setName] = useState<string>('You')
-    const isChinaLoverState = atom({
-        key: 'isChinaLover', // unique ID (with respect to other atoms/selectors)
-        default: false, // default value (aka initial value)
-    });
 
-
-    const isTaiwanLoverState = atom({
-        key: 'isTaiwanLover', // unique ID (with respect to other atoms/selectors)
-        default: false, // default value (aka initial value)
-    });
 
     const isChinaLover = useRecoilValue(isChinaLoverState);
     const isTaiwanLover = useRecoilValue(isTaiwanLoverState);
-    const showInput = isChinaLover || isTaiwanLover;
- 
+
+    const showInput = useMemo(() => isChinaLover || isTaiwanLover, [isChinaLover, isTaiwanLover]);
+
     return (
         <>
             <Space h="xl" />
             <Space h="xl" />
             <Space h="xl" />
             {showInput ?
-                <Input defaultValue={name === 'You' ? '' : name} placeholder='your name here' onChange={(event: React.FormEvent<HTMLInputElement>) => setName(event.currentTarget.value)} /> :
+                <Input defaultValue={name === 'You' ? '' : name}
+                    type="text"
+                    maxLength={40} placeholder='your name here'
+                    onChange={(event: React.FormEvent<HTMLInputElement>) => setName(event.currentTarget.value)} />
+                :
                 <></>
             }
 
